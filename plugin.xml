@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-apple-spay" version="1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>AppleSpay</name>
+    <description>Implements Apple Pay with Stripe.</description>
+    <keywords>cordova,payment,apple pay,stripe</keywords>
+    <preference name="STRIPE_LIVE_PUBLISHABLE_KEY" />
+    <preference name="STRIPE_TEST_PUBLISHABLE_KEY" />
+    <preference name="APPLE_MERCHANT_IDENTIFIER" />
+    <js-module name="AppleSpayPlugin" src="www/AppleSpayPlugin.js">
+        <clobbers target="AppleSpayPlugin" />
+    </js-module>
+    <platform name="ios">
+        <framework src="PassKit.framework"/>
+        <config-file parent="/*" target="config.xml">
+            <feature name="AppleSpayPlugin">
+                <param name="ios-package" value="AppleSpayPlugin" />
+            </feature>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="StripeLivePublishableKey">
+            <string>$STRIPE_LIVE_PUBLISHABLE_KEY</string>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="StripeTestPublishableKey">
+            <string>$STRIPE_TEST_PUBLISHABLE_KEY</string>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="AppleMerchantIdentifier">
+            <string>$APPLE_MERCHANT_IDENTIFIER</string>
+        </config-file>
+
+        <source-file src="src/ios/AppleSpayPlugin.m" />
+
+        <framework src="src/ios/libs/Stripe.framework" custom="true" />
+    </platform>
+</plugin>
