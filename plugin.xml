@@ -31,6 +31,13 @@
 
         <source-file src="src/ios/AppleSpayPlugin.m" />
 
-        <framework src="src/ios/libs/Stripe.framework" custom="true" />
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods>
+                <pod name="Stripe" spec="21.4.0" />
+            </pods>
+        </podspec>
     </platform>
 </plugin>

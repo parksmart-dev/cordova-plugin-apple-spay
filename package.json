@@ -2,7 +2,6 @@
   "name": "cordova-plugin-apple-spay",
   "version": "1.0.0",
   "description": "Implements Apple Pay with Stripe",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
