@@ -39,7 +39,7 @@
     </platform>
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
-            <feature name="AppleSpay">
+            <feature name="AppleSpayPlugin">
                 <param name="android-package" value="com.awkoy.cordova.applespay.AppleSpay" />
             </feature>
         </config-file>
