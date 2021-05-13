@@ -38,13 +38,12 @@
         </podspec>
     </platform>
     <platform name="android">
-        <config-file target="res/xml/config.xml" parent="/*">
-            <config-file parent="/*" target="res/xml/config.xml">
-                <feature name="AppleSpay">
-                    <param name="android-package" value="com.awkoy.cordova.plugins.applespay.AppleSpay" />
-                </feature>
-            </config-file>
-            <source-file src="src/android/AppleSpay.java" target-dir="src/com/awkoy/cordova/plugins/AppleSpay" />
-            <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
-        </platform>
-    </plugin>
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="AppleSpay">
+                <param name="android-package" value="com.awkoy.cordova.applespay.AppleSpay" />
+            </feature>
+        </config-file>
+        <source-file src="src/android/AppleSpay.java" target-dir="src/com/awkoy/cordova/applespay" />
+        <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
+    </platform>
+</plugin>
