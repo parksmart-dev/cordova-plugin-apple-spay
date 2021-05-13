@@ -1,7 +1,14 @@
 {
   "name": "cordova-plugin-apple-spay",
-  "version": "1.0.1",
-  "description": "Implements Apple Pay with Stripe",
+  "version": "1.0.2",
+  "description": "Implements Apple Pay with Stripe.",
+  "cordova": {
+    "id": "cordova-plugin-apple-spay",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/awkoy/cordova-plugin-apple-spay.git"
@@ -9,21 +16,16 @@
   "keywords": [
     "cordova",
     "payment",
-    "apple",
-    "pay",
+    "apple pay",
     "stripe",
-    "plugin"
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android"
   ],
-  "author": "AwKoY",
+  "author": "awkoy.dev@gmail.com",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/awkoy/cordova-plugin-apple-spay/issues"
   },
-  "homepage": "https://github.com/awkoy/cordova-plugin-apple-spay#readme",
-  "cordova": {
-    "id": "cordova-plugin-apple-spay",
-    "platforms": [
-      "ios"
-    ]
-  }
+  "homepage": "https://github.com/awkoy/cordova-plugin-apple-spay#readme"
 }

@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-apple-spay" version="1.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+<plugin id="cordova-plugin-apple-spay" version="1.0"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <name>AppleSpay</name>
     <description>Implements Apple Pay with Stripe.</description>
     <keywords>cordova,payment,apple pay,stripe</keywords>
@@ -10,34 +12,38 @@
         <clobbers target="AppleSpayPlugin" />
     </js-module>
     <platform name="ios">
-        <framework src="PassKit.framework"/>
+        <framework src="PassKit.framework" />
         <config-file parent="/*" target="config.xml">
             <feature name="AppleSpayPlugin">
                 <param name="ios-package" value="AppleSpayPlugin" />
             </feature>
         </config-file>
-
-        <config-file target="*-Info.plist" parent="StripeLivePublishableKey">
+        <config-file parent="StripeLivePublishableKey" target="*-Info.plist">
             <string>$STRIPE_LIVE_PUBLISHABLE_KEY</string>
         </config-file>
-
-        <config-file target="*-Info.plist" parent="StripeTestPublishableKey">
+        <config-file parent="StripeTestPublishableKey" target="*-Info.plist">
             <string>$STRIPE_TEST_PUBLISHABLE_KEY</string>
         </config-file>
-
-        <config-file target="*-Info.plist" parent="AppleMerchantIdentifier">
+        <config-file parent="AppleMerchantIdentifier" target="*-Info.plist">
             <string>$APPLE_MERCHANT_IDENTIFIER</string>
         </config-file>
-
         <source-file src="src/ios/AppleSpayPlugin.m" />
-
         <podspec>
             <config>
-                <source url="https://cdn.cocoapods.org/"/>
+                <source url="https://cdn.cocoapods.org/" />
             </config>
             <pods>
-                <pod name="Stripe" spec="21.4.0" />
+                <pod name="Stripe" spec="21.5.1" />
             </pods>
         </podspec>
+    </platform>
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="AppleSpay">
+                <param name="android-package" value="cordova-plugin-apple-spay.AppleSpay" />
+            </feature>
+        </config-file>
+        <source-file src="src/android/AppleSpay.java" target-dir="src/cordova-plugin-apple-spay/AppleSpay" />
+        <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
     </platform>
 </plugin>

@@ -35,7 +35,7 @@ var AppleSpayPlugin = {
      * @param {Function} [errorCallback] - Optional error callback, recieves message object.
      * @returns {Promise}
      */
-    makePaymentRequest: function({order, clientSecret}, successCallback, errorCallback) {
+    makePaymentRequest: function(order, successCallback, errorCallback) {
 
         return new Promise(function(resolve, reject) {
             exec(function(message) {
@@ -44,7 +44,7 @@ var AppleSpayPlugin = {
             }, function(message) {
                 executeCallback(errorCallback, message);
                 reject(message);
-            }, 'AppleSpayPlugin', 'makePaymentRequest', [order, clientSecret]);
+            }, 'AppleSpayPlugin', 'makePaymentRequest', [order]);
         });
 
     },
