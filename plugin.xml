@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <name>AppleSpay</name>
     <description>Implements Apple Pay with Stripe.</description>
-    <keywords>cordova,payment,apple pay,stripe</keywords>
+    <keywords>cordova,payment,apple pay,google pay,stripe</keywords>
     <preference name="STRIPE_LIVE_PUBLISHABLE_KEY" />
     <preference name="STRIPE_TEST_PUBLISHABLE_KEY" />
     <preference name="APPLE_MERCHANT_IDENTIFIER" />
@@ -33,7 +33,7 @@
                 <source url="https://cdn.cocoapods.org/" />
             </config>
             <pods>
-                <pod name="Stripe" spec="21.5.1" />
+                <pod name="Stripe" spec="23.2.0" />
             </pods>
         </podspec>
     </platform>

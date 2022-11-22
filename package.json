@@ -17,6 +17,7 @@
     "cordova",
     "payment",
     "apple pay",
+    "google pay",
     "stripe",
     "ecosystem:cordova",
     "cordova-ios",
