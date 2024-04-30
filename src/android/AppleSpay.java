@@ -218,8 +218,7 @@ public class AppleSpay extends CordovaPlugin {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 @Nullable Intent data) throws JSONException {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case LOAD_PAYMENT_DATA_REQUEST_CODE: {
