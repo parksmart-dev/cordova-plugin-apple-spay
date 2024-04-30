@@ -18,10 +18,26 @@
 @synthesize paymentCallbackId;
 - (void)pluginInitialize
 {
-    NSString * stripePublishableKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"StripeLivePublishableKey"];
+    //NSString * stripePublishableKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"StripeLivePublishableKey"];
+    //self.appleMerchantIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AppleMerchantIdentifier"];
+    //[StripeAPI setDefaultPublishableKey:stripePublishableKey];
+    //[StripeAPI setStripeAccount:stripePublishableKey];
+    //[[STPPaymentConfiguration sharedConfiguration] setAppleMerchantIdentifier:self.appleMerchantIdentifier];
+}
+
+- (void)manualInit:(CDVInvokedUrlCommand*)command
+{
+    NSString * connectAccountId = [self connectAccountIdFromArguments:command.arguments];
+    NSString * stripePublishableKey = [self stripePublishableKeyFromArguments:command.arguments];
+
     self.appleMerchantIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AppleMerchantIdentifier"];
+
     [StripeAPI setDefaultPublishableKey:stripePublishableKey];
+    [StripeAPI setStripeAccount:connectAccountId];
     [[STPPaymentConfiguration sharedConfiguration] setAppleMerchantIdentifier:self.appleMerchantIdentifier];
+
+    CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"Initialised."];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
 - (void)canMakePayments:(CDVInvokedUrlCommand*)command
@@ -53,6 +69,18 @@
 {
     NSString *clientSecret = [[arguments objectAtIndex:0] objectForKey:@"clientSecret"];
     return clientSecret;
+}
+
+- (NSString *)connectAccountIdFromArguments:(NSArray *)arguments
+{
+    NSString *connectAccountId = [[arguments objectAtIndex:0] objectForKey:@"connectAccountId"];
+    return connectAccountId;
+}
+
+- (NSString *)stripePublishableKeyFromArguments:(NSArray *)arguments
+{
+    NSString *stripeInitKey = [[arguments objectAtIndex:0] objectForKey:@"stripeInitKey"];
+    return stripeInitKey;
 }
 
 - (NSArray *)itemsFromArguments:(NSArray *)arguments

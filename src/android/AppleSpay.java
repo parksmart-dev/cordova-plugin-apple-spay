@@ -47,21 +47,7 @@ public class AppleSpay extends CordovaPlugin {
 
     @Override
     protected void pluginInitialize() {
-        this.publicToken = this.preferences.getString("StripeLivePublishableKey", "pk_test_nXYwkeGYwZPZnGPqiC3Qq0Oz00jnJZzjr8");
-        Log.d("onCreate plugin", this.publicToken);
-        Activity activity = cordova.getActivity();
-        Context context = activity.getApplicationContext();
-
-        PaymentConfiguration.init(context, this.publicToken);
-
-        paymentsClient = Wallet.getPaymentsClient(
-                activity,
-                new Wallet.WalletOptions.Builder()
-                        .setEnvironment(WalletConstants.ENVIRONMENT_TEST)
-                        .build()
-        );
-
-        stripe = new Stripe(context, this.publicToken);
+        
     }
 
     @Override
@@ -72,6 +58,10 @@ public class AppleSpay extends CordovaPlugin {
         }
         if (action.equals("makePaymentRequest")) {
             this.makePaymentRequest(args, callbackContext);
+            return true;
+        }
+        if (action.equals("manualInit")) {
+            this.manualInit(args, callbackContext);
             return true;
         }
         return false;
@@ -106,6 +96,40 @@ public class AppleSpay extends CordovaPlugin {
         isReadyToPayRequestJson.put("allowedPaymentMethods", allowedPaymentMethods);
 
         return IsReadyToPayRequest.fromJson(isReadyToPayRequestJson.toString());
+    }
+
+    private void manualInit(JSONArray args, CallbackContext callbackContext) throws JSONException {
+        JSONObject argss = args.getJSONObject(0);
+        Activity activity = cordova.getActivity();
+        cordova.setActivityResultCallback(this);
+
+        this.callbackContext = callbackContext;
+
+        try {
+            String initKey = getParam(argss, "stripeInitKey");
+            String connectAccountId = getParam(argss, "connectAccountId");
+
+            this.publicToken = initKey;
+            Log.d("onCreate plugin", this.publicToken);
+            Activity activity = cordova.getActivity();
+            Context context = activity.getApplicationContext();
+
+            PaymentConfiguration.init(context, this.publicToken);
+
+            paymentsClient = Wallet.getPaymentsClient(
+                    activity,
+                    new Wallet.WalletOptions.Builder()
+                            .setEnvironment(this.publicToken == null || this.publicToken.contains("test") ? WalletConstants.ENVIRONMENT_TEST : WalletConstants.ENVIRONMENT_PRODUCTION)
+                            .build()
+            );
+
+            stripe = new Stripe(context, this.publicToken, connectAccountId);
+
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, true));
+
+        } catch (JSONException e) {
+            callbackContext.error(e.getMessage());
+        }
     }
 
     private void makePaymentRequest(JSONArray args, CallbackContext callbackContext) throws JSONException {
