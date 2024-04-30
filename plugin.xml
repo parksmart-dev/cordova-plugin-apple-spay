@@ -38,6 +38,11 @@
         </podspec>
     </platform>
     <platform name="android">
+        <config-file parent="./application" target="AndroidManifest.xml">
+            <meta-data
+                    android:name="com.google.android.gms.wallet.api.enabled"
+                    android:value="true"/>
+        </config-file>
         <config-file parent="/*" target="res/xml/config.xml">
             <feature name="AppleSpayPlugin">
                 <param name="android-package" value="com.awkoy.cordova.applespay.AppleSpay" />
