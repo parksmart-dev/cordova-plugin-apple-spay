@@ -111,7 +111,7 @@ public class AppleSpay extends CordovaPlugin {
 
             this.publicToken = initKey;
             Log.d("onCreate plugin", this.publicToken);
-            Activity activity = cordova.getActivity();
+
             Context context = activity.getApplicationContext();
 
             PaymentConfiguration.init(context, this.publicToken);
