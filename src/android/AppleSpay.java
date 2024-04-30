@@ -253,38 +253,46 @@ public class AppleSpay extends CordovaPlugin {
         }
     }
 
-    private void onGooglePayResult(@NonNull Intent data) throws JSONException {
+    private void onGooglePayResult(@NonNull Intent data) {
         final PaymentData paymentData = PaymentData.getFromIntent(data);
         String clientSecret = this.clientSecret;
         if (paymentData == null) {
             return;
         }
 
-        final PaymentMethodCreateParams paymentMethodCreateParams =
-                PaymentMethodCreateParams.createFromGooglePay(
-                        new JSONObject(paymentData.toJson()));
+        try 
+        {
+            final PaymentMethodCreateParams paymentMethodCreateParams =
+                    PaymentMethodCreateParams.createFromGooglePay(
+                            new JSONObject(paymentData.toJson()));
 
-        stripe.createPaymentMethod(
-                paymentMethodCreateParams,
-                new ApiResultCallback<PaymentMethod>() {
-                    @Override
-                    public void onSuccess(@NonNull PaymentMethod result) {
-                        // See https://stripe.com/docs/payments/accept-a-payment?platform=android#android-create-payment-intent
-                        // for how to create a PaymentIntent on your backend and use its client secret
-                        // to confirm the payment on the client.
-                        ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
-                                .createWithPaymentMethodId(
-                                        result.id,
-                                        clientSecret
-                                );
-                        stripe.confirmPayment(cordova.getActivity(), confirmParams, null);
-                        callbackContext.success("payment success");
-                    }
+            stripe.createPaymentMethod(
+                    paymentMethodCreateParams,
+                    new ApiResultCallback<PaymentMethod>() {
+                        @Override
+                        public void onSuccess(@NonNull PaymentMethod result) {
+                            // See https://stripe.com/docs/payments/accept-a-payment?platform=android#android-create-payment-intent
+                            // for how to create a PaymentIntent on your backend and use its client secret
+                            // to confirm the payment on the client.
+                            ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
+                                    .createWithPaymentMethodId(
+                                            result.id,
+                                            clientSecret
+                                    );
+                            stripe.confirmPayment(cordova.getActivity(), confirmParams, null);
+                            callbackContext.success("payment success");
+                        }
 
-                    @Override
-                    public void onError(@NonNull Exception e) {
+                        @Override
+                        public void onError(@NonNull Exception e) {
+                        }
                     }
-                }
-        );
+            );
+        } catch (JSONException e) 
+        {
+            //Log.i("DRIVER", e.toString());
+            //webView.loadUrl("javascript:console.log('Error');");
+            callbackContext.error("JSON error");
+        }
     }
 }
