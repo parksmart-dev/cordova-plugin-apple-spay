@@ -280,11 +280,12 @@ public class AppleSpay extends CordovaPlugin {
                                             clientSecret
                                     );
                             stripe.confirmPayment(cordova.getActivity(), confirmParams, null);
-                            callbackContext.success("payment success");
+                            callbackContext.success(result.id);
                         }
 
                         @Override
                         public void onError(@NonNull Exception e) {
+                            callbackContext.error("Error2 occurred while attempting to pay with GooglePay. Error #" + e.toString());
                         }
                     }
             );
