@@ -33,8 +33,9 @@
     self.appleMerchantIdentifier = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AppleMerchantIdentifier"];
 
     [StripeAPI setDefaultPublishableKey:stripePublishableKey];
-    [StripeAPI setStripeAccount:connectAccountId];
+
     [[STPPaymentConfiguration sharedConfiguration] setAppleMerchantIdentifier:self.appleMerchantIdentifier];
+    [[STPPaymentConfiguration sharedConfiguration] setStripeAccount:connectAccountId];
 
     CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"Initialised."];
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
