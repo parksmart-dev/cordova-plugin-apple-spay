@@ -184,11 +184,18 @@ public class AppleSpay extends CordovaPlugin {
                             .put("merchantName", "ParkSmart"))
                     .put("emailRequired", false);
 
-            AutoResolveHelper.resolveTask(
-                    paymentsClient.loadPaymentData(PaymentDataRequest.fromJson(paymentDataRequest.toString())),
-                    activity,
-                    LOAD_PAYMENT_DATA_REQUEST_CODE
-            );
+            String requestJson = paymentDataRequest.toString();
+
+            PaymentDataRequest request = PaymentDataRequest.fromJson(requestJson);
+
+            // Since loadPaymentData may show the UI asking the user to select a payment method, we use
+            // AutoResolveHelper to wait for the user interacting with it. Once completed,
+            // onActivityResult will be called with the result.
+            if (request != null) 
+            {
+                AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(request), activity, LOAD_PAYMENT_DATA_REQUEST_CODE);
+            }
+
         } catch (JSONException e) {
             callbackContext.error(e.getMessage());
         }
@@ -219,46 +226,40 @@ public class AppleSpay extends CordovaPlugin {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case LOAD_PAYMENT_DATA_REQUEST_CODE: {
-                switch (resultCode) {
-                    case Activity.RESULT_OK: {
-                        if (data != null) {
-                            onGooglePayResult(data);
-                        }
-                        break;
-                    }
-                    case Activity.RESULT_CANCELED: {
-                        callbackContext.error("Payment cancelled");
-                        break;
-                    }
-                    case AutoResolveHelper.RESULT_ERROR: {
-                        // Log the status for debugging
-                        // Generally there is no need to show an error to
-                        // the user as the Google Payment API will do that
-                        Status status = AutoResolveHelper.getStatusFromIntent(data);
-                        callbackContext.error(status.getStatusMessage());
-                        break;
-                    }
-                    default: {
-                        // Do nothing.
-                    }
-                }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) 
+    {
+        // value passed in AutoResolveHelper
+        if (requestCode != LOAD_PAYMENT_DATA_REQUEST_CODE) {
+            return;
+        }
+
+        switch (resultCode) 
+        {
+            case Activity.RESULT_OK: 
+                onGooglePayResult(data);
                 break;
-            }
-            default: {
-                // Handle any other startActivityForResult calls you may have made.
-            }
+            
+            case Activity.RESULT_CANCELED:
+                callbackContext.error("Payment cancelled");
+                break;
+            
+            case AutoResolveHelper.RESULT_ERROR: 
+                // Log the status for debugging
+                // Generally there is no need to show an error to
+                // the user as the Google Payment API will do that
+                Status status = AutoResolveHelper.getStatusFromIntent(data);
+                callbackContext.error(status.getStatusMessage());
+                break;
+            
+            default: 
+                // Do nothing.
+                break;
         }
     }
 
     private void onGooglePayResult(@NonNull Intent data) 
     {
-        final PaymentData paymentData = PaymentData.getFromIntent(data);
-
-        String clientSecret = this.clientSecret;
+        PaymentData paymentData = PaymentData.getFromIntent(data);
 
         if (paymentData == null) 
         {
@@ -268,7 +269,9 @@ public class AppleSpay extends CordovaPlugin {
 
         try 
         {
-            final PaymentMethodCreateParams paymentMethodCreateParams = PaymentMethodCreateParams.createFromGooglePay(new JSONObject(paymentData.toJson()));
+            JSONObject jsonObj = new JSONObject(paymentData.toJson());
+
+            PaymentMethodCreateParams paymentMethodCreateParams = PaymentMethodCreateParams.createFromGooglePay(jsonObj);
 
             stripe.createPaymentMethod(
                     paymentMethodCreateParams,
@@ -276,16 +279,6 @@ public class AppleSpay extends CordovaPlugin {
                         @Override
                         public void onSuccess(@NonNull PaymentMethod result) 
                         {
-                            // See https://stripe.com/docs/payments/accept-a-payment?platform=android#android-create-payment-intent
-                            // for how to create a PaymentIntent on your backend and use its client secret
-                            // to confirm the payment on the client.
-                            //ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
-                            //        .createWithPaymentMethodId(
-                            //                result.id,
-                            //                clientSecret
-                            //        );
-                            //stripe.confirmPayment(cordova.getActivity(), confirmParams, null);
-                            
                             callbackContext.success(result.id);
                         }
 
