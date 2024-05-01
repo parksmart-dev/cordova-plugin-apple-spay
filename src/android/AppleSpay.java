@@ -52,19 +52,26 @@ public class AppleSpay extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals("canMakePayments")) {
-            this.canMakePayments(args, callbackContext);
-            return true;
+
+        switch (action) 
+        {
+            case "canMakePayments":
+                canMakePayments(args, callbackContext);
+                break;
+
+            case "makePaymentRequest":
+                makePaymentRequest(args, callbackContext);
+                break;
+
+            case "manualInit":
+                manualInit(args, callbackContext);
+                break;
+
+            default:
+                return false;
         }
-        if (action.equals("makePaymentRequest")) {
-            this.makePaymentRequest(args, callbackContext);
-            return true;
-        }
-        if (action.equals("manualInit")) {
-            this.manualInit(args, callbackContext);
-            return true;
-        }
-        return false;
+
+        return true;
     }
 
     @NonNull
