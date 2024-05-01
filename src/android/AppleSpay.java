@@ -132,7 +132,8 @@ public class AppleSpay extends CordovaPlugin {
         }
     }
 
-    private void makePaymentRequest(JSONArray args, CallbackContext callbackContext) throws JSONException {
+    private void makePaymentRequest(JSONArray args, CallbackContext callbackContext) throws JSONException 
+    {
         JSONObject argss = args.getJSONObject(0);
         Activity activity = cordova.getActivity();
         cordova.setActivityResultCallback(this);
@@ -145,8 +146,8 @@ public class AppleSpay extends CordovaPlugin {
             String countryCode = getParam(argss, "countryCode");
             this.clientSecret = getParam(argss, "clientSecret");
 
-            final JSONObject tokenizationSpec =
-                    new GooglePayConfig(this.cordova.getActivity()).getTokenizationSpecification();
+            final JSONObject tokenizationSpec = new GooglePayConfig(this.cordova.getActivity()).getTokenizationSpecification();
+
             final JSONObject cardPaymentMethod = new JSONObject()
                     .put("type", "CARD")
                     .put(
@@ -278,12 +279,13 @@ public class AppleSpay extends CordovaPlugin {
                             // See https://stripe.com/docs/payments/accept-a-payment?platform=android#android-create-payment-intent
                             // for how to create a PaymentIntent on your backend and use its client secret
                             // to confirm the payment on the client.
-                            ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
-                                    .createWithPaymentMethodId(
-                                            result.id,
-                                            clientSecret
-                                    );
-                            stripe.confirmPayment(cordova.getActivity(), confirmParams, null);
+                            //ConfirmPaymentIntentParams confirmParams = ConfirmPaymentIntentParams
+                            //        .createWithPaymentMethodId(
+                            //                result.id,
+                            //                clientSecret
+                            //        );
+                            //stripe.confirmPayment(cordova.getActivity(), confirmParams, null);
+                            
                             callbackContext.success(result.id);
                         }
 
