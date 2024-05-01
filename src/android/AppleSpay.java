@@ -41,7 +41,8 @@ public class AppleSpay extends CordovaPlugin {
     private static final int LOAD_PAYMENT_DATA_REQUEST_CODE = 53;
     private PaymentsClient paymentsClient;
     private Stripe stripe;
-    private String publicToken;
+    private String initKey;
+    private String connectAccountId;
     private CallbackContext callbackContext;
     private String clientSecret;
 
@@ -113,24 +114,23 @@ public class AppleSpay extends CordovaPlugin {
         this.callbackContext = callbackContext;
 
         try {
-            String initKey = getParam(argss, "stripeInitKey");
-            String connectAccountId = getParam(argss, "connectAccountId");
+            this.initKey = getParam(argss, "stripeInitKey");
+            this.connectAccountId = getParam(argss, "connectAccountId");
 
-            this.publicToken = initKey;
-            Log.d("onCreate plugin", this.publicToken);
+            Log.d("onCreate plugin", this.initKey);
 
             Context context = activity.getApplicationContext();
 
-            PaymentConfiguration.init(context, this.publicToken);
+            PaymentConfiguration.init(context, this.initKey);
 
             paymentsClient = Wallet.getPaymentsClient(
                     activity,
                     new Wallet.WalletOptions.Builder()
-                            .setEnvironment(this.publicToken == null || this.publicToken.contains("test") ? WalletConstants.ENVIRONMENT_TEST : WalletConstants.ENVIRONMENT_PRODUCTION)
+                            .setEnvironment(this.initKey == null || this.initKey.contains("test") ? WalletConstants.ENVIRONMENT_TEST : WalletConstants.ENVIRONMENT_PRODUCTION)
                             .build()
             );
 
-            stripe = new Stripe(context, this.publicToken, connectAccountId);
+            stripe = new Stripe(context, this.initKey, this.connectAccountId);
 
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, true));
 
@@ -153,7 +153,7 @@ public class AppleSpay extends CordovaPlugin {
             String countryCode = getParam(argss, "countryCode");
             this.clientSecret = getParam(argss, "clientSecret");
 
-            final JSONObject tokenizationSpec = new GooglePayConfig(this.cordova.getActivity()).getTokenizationSpecification();
+            final JSONObject tokenizationSpec = new GooglePayConfig(this.initKey, this.connectAccountId).getTokenizationSpecification();
 
             final JSONObject cardPaymentMethod = new JSONObject()
                     .put("type", "CARD")
