@@ -180,7 +180,7 @@ public class AppleSpay extends CordovaPlugin {
                             .put("countryCode", countryCode)
                     )
                     .put("merchantInfo", new JSONObject()
-                            .put("merchantName", "EasyGet"))
+                            .put("merchantName", "ParkSmart"))
                     .put("emailRequired", false);
 
             AutoResolveHelper.resolveTask(
@@ -253,24 +253,28 @@ public class AppleSpay extends CordovaPlugin {
         }
     }
 
-    private void onGooglePayResult(@NonNull Intent data) {
+    private void onGooglePayResult(@NonNull Intent data) 
+    {
         final PaymentData paymentData = PaymentData.getFromIntent(data);
+
         String clientSecret = this.clientSecret;
-        if (paymentData == null) {
+
+        if (paymentData == null) 
+        {
+            callbackContext.error("Error with paymentData");
             return;
         }
 
         try 
         {
-            final PaymentMethodCreateParams paymentMethodCreateParams =
-                    PaymentMethodCreateParams.createFromGooglePay(
-                            new JSONObject(paymentData.toJson()));
+            final PaymentMethodCreateParams paymentMethodCreateParams = PaymentMethodCreateParams.createFromGooglePay(new JSONObject(paymentData.toJson()));
 
             stripe.createPaymentMethod(
                     paymentMethodCreateParams,
                     new ApiResultCallback<PaymentMethod>() {
                         @Override
-                        public void onSuccess(@NonNull PaymentMethod result) {
+                        public void onSuccess(@NonNull PaymentMethod result) 
+                        {
                             // See https://stripe.com/docs/payments/accept-a-payment?platform=android#android-create-payment-intent
                             // for how to create a PaymentIntent on your backend and use its client secret
                             // to confirm the payment on the client.
@@ -284,7 +288,8 @@ public class AppleSpay extends CordovaPlugin {
                         }
 
                         @Override
-                        public void onError(@NonNull Exception e) {
+                        public void onError(@NonNull Exception e) 
+                        {
                             callbackContext.error("Error2 occurred while attempting to pay with GooglePay. Error #" + e.toString());
                         }
                     }
