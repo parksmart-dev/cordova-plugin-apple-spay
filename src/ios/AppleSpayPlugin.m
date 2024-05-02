@@ -148,9 +148,8 @@
 }
 
 - (void)applePayContext:(STPApplePayContext * _Nonnull)context didCreatePaymentMethod:(STPPaymentMethod * _Nonnull)paymentMethod paymentInformation:(PKPayment * _Nonnull)paymentInformation completion:(void (^ _Nonnull)(NSString * _Nullable, NSError * _Nullable))completion {
-    completion(paymentMethod.stripeId, nil);
+    //completion(paymentMethod.stripeId, nil);
 
-    /*
     CDVPluginResult* result;
 
     if (paymentMethod == nil)
@@ -165,7 +164,6 @@
     }
 
     self.viewController.dismiss(animated: true, completion: nil)
-    */
 }
 
 
