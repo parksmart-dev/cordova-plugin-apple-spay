@@ -148,7 +148,20 @@
 }
 
 - (void)applePayContext:(STPApplePayContext * _Nonnull)context didCreatePaymentMethod:(STPPaymentMethod * _Nonnull)paymentMethod paymentInformation:(PKPayment * _Nonnull)paymentInformation completion:(void (^ _Nonnull)(NSString * _Nullable, NSError * _Nullable))completion {
-    completion(clientSecret, nil);
+    //completion(clientSecret, nil);
+
+    CDVPluginResult* result;
+
+    if (paymentMethod == nil)
+    {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"ApplePay context error."];
+        [self.commandDelegate sendPluginResult:result callbackId:self.paymentCallbackId];
+    }
+    else
+    {
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: paymentMethod.stripeId];
+        [self.commandDelegate sendPluginResult:result callbackId:self.paymentCallbackId];      
+    }
 }
 
 
