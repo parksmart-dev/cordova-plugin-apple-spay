@@ -128,42 +128,43 @@
 }
 
 - (void)applePayContext:(STPApplePayContext *)context didCompleteWithStatus:(STPPaymentStatus)status error:(NSError *)error {
-    CDVPluginResult* result;
     switch (status) {
         case STPPaymentStatusSuccess:
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"ApplePay context success."];
-            [self.commandDelegate sendPluginResult:result callbackId:self.paymentCallbackId];
+            // Payment succeeded, show a receipt view
+            NSLog(@"SUCCESS");
             break;
 
         case STPPaymentStatusError:
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"ApplePay context error."];
-            [self.commandDelegate sendPluginResult:result callbackId:self.paymentCallbackId];
+            NSLog(@"Error");
+            // Payment failed, show the error
             break;
 
         case STPPaymentStatusUserCancellation:
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"ApplePay context cancell."];
-            [self.commandDelegate sendPluginResult:result callbackId:self.paymentCallbackId];
+            // User cancelled the payment
+             NSLog(@"CANCELLED");
             break;
     }
 }
 
 - (void)applePayContext:(STPApplePayContext * _Nonnull)context didCreatePaymentMethod:(STPPaymentMethod * _Nonnull)paymentMethod paymentInformation:(PKPayment * _Nonnull)paymentInformation completion:(void (^ _Nonnull)(NSString * _Nullable, NSError * _Nullable))completion {
     //completion(paymentMethod.stripeId, nil);
-
     CDVPluginResult* result;
 
     if (paymentMethod == nil)
     {
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"ApplePay context error."];
-        [self.commandDelegate sendPluginResult:result callbackId:self.paymentCallbackId];
     }
     else
     {
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: paymentMethod.stripeId];
-        [self.commandDelegate sendPluginResult:result callbackId:self.paymentCallbackId];      
+        
     }
-
-    self.viewController.dismiss(animated: true, completion: nil)
+    
+    [self.commandDelegate sendPluginResult:result callbackId:self.paymentCallbackId];
+    
+    self.paymentCallbackId = nil;
+    
+    completion(@"", nil);
 }
 
 
