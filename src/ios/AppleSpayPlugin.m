@@ -114,6 +114,10 @@
     PKPaymentRequest *paymentRequest = [StripeAPI paymentRequestWithMerchantIdentifier:self.appleMerchantIdentifier country:countryCode currency:currencyCode];
     
     paymentRequest.paymentSummaryItems = paymentSummaryItems;
+
+    NSArray * connectAccountId = [self connectAccountIdFromArguments:command.arguments];
+
+    [[STPPaymentConfiguration sharedConfiguration] setStripeAccount:connectAccountId];
     
     STPApplePayContext *applePayContext = [[STPApplePayContext alloc] initWithPaymentRequest:paymentRequest delegate:self];
     if (applePayContext) {
